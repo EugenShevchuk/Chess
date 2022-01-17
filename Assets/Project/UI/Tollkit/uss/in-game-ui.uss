@@ -1,0 +1,91 @@
+.pop-up {
+    align-items: center;
+    -unity-background-image-tint-color: rgb(55, 55, 55);
+    background-color: rgb(106, 82, 72);
+    -unity-slice-left: 0;
+    -unity-slice-top: 0;
+    -unity-slice-right: 0;
+    border-left-width: 10px;
+    border-right-width: 10px;
+    border-top-width: 10px;
+    border-bottom-width: 10px;
+    flex-wrap: nowrap;
+    border-top-left-radius: 50px;
+    border-bottom-left-radius: 50px;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    border-left-color: rgb(197, 197, 197);
+    border-right-color: rgb(197, 197, 197);
+    border-top-color: rgb(197, 197, 197);
+    border-bottom-color: rgb(197, 197, 197);
+    -unity-background-scale-mode: stretch-to-fill;
+    justify-content: space-between;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-direction: column;
+    -unity-slice-bottom: 0;
+    flex-basis: auto;
+    background-image: none;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 3%;
+    padding-right: 3%;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    left: 25%;
+    top: 25%;
+    right: 25%;
+    bottom: 25%;
+    width: 50%;
+    height: 50%;
+}
+
+.button {
+    align-items: center;
+    justify-content: space-around;
+    width: 500px;
+    height: 80px;
+    font-size: 55px;
+    white-space: nowrap;
+    -unity-font-style: bold;
+    border-left-color: rgb(214, 213, 255);
+    border-right-color: rgb(214, 213, 255);
+    border-top-color: rgb(214, 213, 255);
+    border-bottom-color: rgb(214, 213, 255);
+    border-left-width: 5px;
+    border-right-width: 5px;
+    border-top-width: 5px;
+    border-bottom-width: 5px;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    color: rgb(255, 255, 255);
+    background-color: rgba(107, 109, 185, 0.73);
+}
+
+.button:hover {
+    align-items: center;
+    justify-content: space-around;
+    width: 550px;
+    height: 88px;
+    font-size: 60px;
+    white-space: nowrap;
+    -unity-font-style: bold;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-left-width: 5px;
+    border-right-width: 5px;
+    border-top-width: 5px;
+    border-bottom-width: 5px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    color: rgb(255, 255, 255);
+    background-color: rgba(55, 57, 103, 0.78);
+}
