@@ -8,5 +8,10 @@ namespace Project.Extensions
         {
             return filter.GetEntitiesCount() == 0;
         }
+
+        public static bool HasOneEntity(this EcsFilter filter)
+        {
+            return filter.GetEntitiesCount() == 1;
+        }
     }
 }

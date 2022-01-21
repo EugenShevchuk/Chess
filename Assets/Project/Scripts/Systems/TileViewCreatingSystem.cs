@@ -14,9 +14,7 @@ namespace Project.Systems
         private readonly GameSceneData _sceneData;
 
         private readonly EcsFilter _filter;
-        private readonly EcsFilter _beingCreated;
-
-        private readonly EcsPool<CreateViewRequest> _requestPool;
+        
         private readonly EcsPool<ObjectViewRef> _viewRefPool;
         private readonly EcsPool<Tile> _tilePool;
 
@@ -29,14 +27,7 @@ namespace Project.Systems
                 .Inc<Tile>()
                 .Exc<ObjectViewRef>()
                 .End();
-
-            _beingCreated = world.Filter<CreateViewRequest>()
-                .Inc<Tile>()
-                .Inc<BeingCreated>()
-                .Exc<ObjectViewRef>()
-                .End();
-
-            _requestPool = world.GetPool<CreateViewRequest>();
+            
             _viewRefPool = world.GetPool<ObjectViewRef>();
             _tilePool = world.GetPool<Tile>();
         }

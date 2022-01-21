@@ -8,11 +8,11 @@ namespace Project.UI
     {
         [Header("Board creation")]
         [SerializeField] private Button _createBoardButton;
-        [SerializeField] private PopUpView _boardCreationPopUp;
+        [SerializeField] private DisplayableUIView BoardCreationDisplayableUI;
         
         [Header("Figures placing")]
         [SerializeField] private Button _placeFiguresButton;
-        [SerializeField] private PopUpView _figurePlacingPopUp;
+        [SerializeField] private DisplayableUIView FigurePlacingDisplayableUI;
 
         private void OnEnable()
         {
@@ -28,12 +28,12 @@ namespace Project.UI
 
         private void ShowBoardCreationPopUp()
         {
-            _boardCreationPopUp.ShowPopUpAsync().Forget();
+            BoardCreationDisplayableUI.ShowPopUpAsync().Forget();
         }
 
         private void ShowFigurePlacingPopUp()
         {
-            _figurePlacingPopUp.ShowPopUpAsync().Forget();
+            FigurePlacingDisplayableUI.ShowPopUpAsync().Forget();
         }
     }
 }

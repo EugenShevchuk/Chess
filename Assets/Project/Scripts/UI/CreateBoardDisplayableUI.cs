@@ -3,7 +3,7 @@ using Project.Infrastructure;
 
 namespace Project.UI
 {
-    public sealed class CreateBoardPopUp : PopUpView
+    public sealed class CreateBoardDisplayableUI : DisplayableUIView
     {
         private EcsWorld _world;
 

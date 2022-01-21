@@ -1,6 +1,6 @@
 namespace Project.Infrastructure.Enums
 {
-    public enum FigureType
+    public enum FigureType : byte
     {
         Pawn,
         Bishop,

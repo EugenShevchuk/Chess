@@ -46,9 +46,6 @@ namespace Project.Systems
 
         private async UniTask MoveFigure(int figureEntity)
         {
-            if (_whitePool.Has(figureEntity) && _whiteMovingFigures.IsEmpty() == false)
-                return;
-            
             var figureTransform = _figurePool.Get(figureEntity).Transform;
             var targetEntity = _moveRequestPool.Get(figureEntity).Destination;
              

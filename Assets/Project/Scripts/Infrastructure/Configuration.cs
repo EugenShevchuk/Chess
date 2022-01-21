@@ -30,6 +30,9 @@ namespace Project.Infrastructure
             get { return _figureMap ??= _figures.ToDictionary(view => view.Type);}
         }
 
+        [Header("Figures initial placement")] 
+        public float FigurePlacementInterval;
+
         [Header("Figure Movement")] 
         public float Speed = 3f;
         public float StandardFlyUpHeight = .5f;
@@ -39,5 +42,9 @@ namespace Project.Infrastructure
         public AnimationCurve FlyUpCurve;
         public AnimationCurve FlyCurve;
         public AnimationCurve FlyDownCurve;
+
+        [Header("Raycast data")] 
+        public float RaycastDistance = 100f;
+        public LayerMask InteractableLayers;
     }
 }

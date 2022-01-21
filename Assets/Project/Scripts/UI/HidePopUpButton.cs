@@ -8,13 +8,13 @@ namespace Project.UI
     [RequireComponent(typeof(Button))]
     public sealed class HidePopUpButton : MonoBehaviour
     {
-        private PopUpView _popUp;
+        private DisplayableUIView _displayableUI;
         private Button _button;
 
         private void Awake()
         {
             _button = GetComponent<Button>();
-            _popUp = GetComponentInParent<PopUpView>();
+            _displayableUI = GetComponentInParent<DisplayableUIView>();
         }
 
         private void OnEnable()
@@ -29,7 +29,7 @@ namespace Project.UI
 
         private void HidePopUp()
         {
-            _popUp.HidePopUpAsync().Forget();
+            _displayableUI.HidePopUpAsync().Forget();
         }
     }
 }

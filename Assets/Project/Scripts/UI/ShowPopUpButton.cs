@@ -7,9 +7,9 @@ namespace Project.UI
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Button))]
-    public sealed class CreateBoardButton : MonoBehaviour
+    public sealed class ShowPopUpButton : MonoBehaviour
     {
-        [SerializeField] private PopUpView _createBoardPopUp;
+        [SerializeField] private DisplayableUIView DisplayableUI;
         
         private Button _button;
 
@@ -30,7 +30,7 @@ namespace Project.UI
 
         private void ShowPopUp()
         {
-            _createBoardPopUp.ShowPopUpAsync().Forget();
+            DisplayableUI.ShowPopUpAsync().Forget();
         }
     }
 }

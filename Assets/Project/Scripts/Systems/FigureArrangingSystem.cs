@@ -1,16 +1,16 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 using Leopotam.EcsLite;
 using Project.Components;
-using Project.Extensions;
+using Project.Infrastructure;
 using Project.Infrastructure.BoardLayouts;
-using Project.Infrastructure.Enums;
 using UnityEngine;
 
 namespace Project.Systems
 {
     internal sealed class FigureArrangingSystem : IEcsRunSystem
     {
-        private readonly EcsWorld _world;
+        private readonly Configuration _config;
         
         private readonly EcsFilter _arrangeRequest;
         private readonly EcsFilter _freeTiles;
@@ -18,12 +18,12 @@ namespace Project.Systems
         private readonly EcsPool<ArrangeFiguresRequest> _arrangeRequestPool;
         private readonly EcsPool<Tile> _tilePool;
 
-        private readonly EcsPool<CreateFigureRequest> _figureRequestPool;
-        private readonly EcsPool<MoveRequest> _moveRequestPool;
+        private readonly EcsPool<PlaceFigureRequest> _placeFigureRequestPool;
 
-        internal FigureArrangingSystem(EcsWorld world)
+        internal FigureArrangingSystem(EcsWorld world, Configuration config)
         {
-            _world = world;
+            _config = config;
+            
             _arrangeRequest = world
                 .Filter<ArrangeFiguresRequest>()
                 .End();
@@ -36,8 +36,7 @@ namespace Project.Systems
             _arrangeRequestPool = world.GetPool<ArrangeFiguresRequest>();
             _tilePool = world.GetPool<Tile>();
 
-            _figureRequestPool = world.GetPool<CreateFigureRequest>();
-            _moveRequestPool = world.GetPool<MoveRequest>();
+            _placeFigureRequestPool = world.GetPool<PlaceFigureRequest>();
         }
 
         public void Run(EcsSystems systems)
@@ -46,109 +45,40 @@ namespace Project.Systems
             {
                 var layout = _arrangeRequestPool.Get(i).Layout;
                 
-                PlaceFiguresOnBoard(layout);
+                PlaceFiguresOnBoard(layout).Forget();
                 
                 _arrangeRequestPool.Del(i);
             }
         }
 
-        private void PlaceFiguresOnBoard(FigureLayout layout)
+        private async UniTask PlaceFiguresOnBoard(FigureLayout layout)
         {
-            for (var i = 0; i < layout.Tiles.Length; i++)
+            foreach (var data in layout.Tiles)
             {
-                var team = layout.Tiles[i].Team;
-                var figureType = layout.Tiles[i].FigureType;
-                var position = layout.Tiles[i].Position;
+                RequestFigurePlacement(data);
 
-                var entity = GetFigureEntity(team, figureType);
-
-                var destination = FindDestinationTile(position);
-
-                ref var moveRequest = ref _moveRequestPool.Add(entity);
-                moveRequest.Destination = destination;
+                await UniTask.Delay(TimeSpan.FromSeconds(_config.FigurePlacementInterval));
             }
         }
 
-        private int GetFigureEntity(Team team, FigureType figureType)
+        private void RequestFigurePlacement(FigureLayout.TileData tileData)
         {
-            if (FigureExists(team, figureType, true, out var filter1))
-                return filter1.GetRawEntities()[0];
-
-            return FigureExists(team, figureType, false, out var filter2) ? filter2.GetRawEntities()[0] : RequestFigureCreation(team, figureType);
+            var destinationTileEntity = FindDestinationTileEntity(tileData.Position);
+            ref var request = ref _placeFigureRequestPool.Add(destinationTileEntity);
+            request.Team = tileData.Team;
+            request.Type = tileData.FigureType;
         }
 
-        private EcsPackedEntity FindDestinationTile(Vector2Int position)
+        private int FindDestinationTileEntity(Vector2Int position)
         {
             foreach (var i in _freeTiles)
             {
                 var tile = _tilePool.Get(i);
                 
                 if (tile.Position == position)
-                    return _world.PackEntity(i);
+                    return i;
             }
             throw new Exception("Cannot find destination tile");
-        }
-
-        private bool FigureExists(Team team, FigureType figureType, bool checkOnBoard, out EcsFilter filter)
-        {
-            filter = team switch
-            {
-                Team.White => figureType switch
-                {
-                    FigureType.Pawn => GetFilter<White, Pawn>(),
-                    FigureType.Bishop => GetFilter<White, Bishop>(),
-                    FigureType.Knight => GetFilter<White, Knight>(),
-                    FigureType.Rook => GetFilter<White, Rook>(),
-                    FigureType.Queen => GetFilter<White, Queen>(),
-                    FigureType.King => GetFilter<White, King>(),
-                    _ => throw new ArgumentOutOfRangeException()
-                },
-                Team.Black => figureType switch
-                {
-                    FigureType.Pawn => GetFilter<Black, Pawn>(),
-                    FigureType.Bishop => GetFilter<Black, Bishop>(),
-                    FigureType.Knight => GetFilter<Black, Knight>(),
-                    FigureType.Rook => GetFilter<Black, Rook>(),
-                    FigureType.Queen => GetFilter<Black, Queen>(),
-                    FigureType.King => GetFilter<Black, King>(),
-                    _ => throw new ArgumentOutOfRangeException()
-                },
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
-            return filter.IsEmpty() == false;
-
-            EcsFilter GetFilter<TTeam, TFigureType>() where TTeam : struct where TFigureType : struct
-            {
-                if (checkOnBoard)
-                {
-                    return _world
-                        .Filter<TTeam>()
-                        .Inc<TFigureType>()
-                        .Inc<OnBoard>()
-                        .Exc<MoveRequest>()
-                        .End();
-                }
-
-                return _world
-                    .Filter<TTeam>()
-                    .Inc<TFigureType>()
-                    .Exc<OnBoard>()
-                    .Exc<MoveRequest>()
-                    .End();
-            }
-        }
-
-        private int RequestFigureCreation(Team team, FigureType type)
-        {
-            var entity = _world.NewEntity();
-
-            ref var request = ref _figureRequestPool.Add(entity);
-
-            request.Team = team;
-            request.Type = type;
-            
-            return entity;
         }
     }
 }

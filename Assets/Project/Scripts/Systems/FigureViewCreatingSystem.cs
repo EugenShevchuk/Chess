@@ -50,6 +50,7 @@ namespace Project.Systems
 
                 (viewRef.View, figure.Transform) = CreateView(figureRequest.Type, figureRequest.Team);
                 
+                _figureRequestPool.Del(i);
                 _viewRequestPool.Del(i);
             }
         }

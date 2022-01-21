@@ -11,12 +11,12 @@ namespace Project.UI
         [SerializeField] private TMP_InputField _widthInput;
         [SerializeField] private TMP_InputField _lenghtInput;
 
-        private PopUpView _popUp;
+        private DisplayableUIView _displayableUI;
 
         protected override void Awake()
         {
             base.Awake();
-            _popUp = GetComponentInParent<PopUpView>();
+            _displayableUI = GetComponentInParent<DisplayableUIView>();
         }
 
         protected override void OnButtonClick()
@@ -26,7 +26,7 @@ namespace Project.UI
 
         private async UniTask OnButtonClickAsync()
         {
-            await _popUp.HidePopUpAsync();
+            await _displayableUI.HidePopUpAsync();
             
             RequestBoardCreation();
         }
