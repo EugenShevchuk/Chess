@@ -21,15 +21,11 @@ namespace Project.UI
         [SerializeField] private float _timeToAnimate;
         [SerializeField] private bool _isActiveByDefault;
 
-        private RectTransform _transform;
-
         private Vector3 _startPosition;
         private Vector3 _hiddenPosition;
     
         private void Awake()
         {
-            _transform = GetComponent<RectTransform>();
-
             if (_displayMethod == DisplayMethod.ScaleUp)
             {
                 if (_isActiveByDefault)
@@ -158,7 +154,6 @@ namespace Project.UI
         private Vector3 GetHiddenPositionLeft()
         {
             var position = transform.position;
-            
             position.x -= Screen.width;
             return position;
         }

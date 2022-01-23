@@ -5,5 +5,6 @@
         public const string BOARD_GENERATION = "BoardCreation";
         public const string FIGURE_ARRANGEMENT = "FigureArrangement";
         public const string LAYOUT_CREATION = "LayoutCreation";
+        public const string FIGURE_CREATION = "FigureCreation";
     }
 }

@@ -31,6 +31,9 @@ namespace Project.Systems
         [EcsPool] private readonly EcsPool<IsMoving> _isMovingPool = default;
         [EcsPool] private readonly EcsPool<WorldObject> _worldObjectPool = default;
         [EcsPool] private readonly EcsPool<MoveRequest> _moveRequestPool = default;
+
+        [EcsPool] private readonly EcsPool<Tile> _tilePool = default;
+        [EcsPool] private readonly EcsPool<OnBoard> _onBoardPool = default;
         
         public void Run(EcsSystems systems)
         {
@@ -56,6 +59,9 @@ namespace Project.Systems
 
                 var target = _worldObjectPool.Get(entity).Transform.position;
                 target.y = 0;
+                
+                if (target.Equals(figureTransform.position))
+                    return;
 
                 var isKnight = _knightPool.Has(entity);
 
@@ -67,10 +73,15 @@ namespace Project.Systems
                 await FlyUpAsync(figureTransform, yMoveHeight, yMoveDuration);
 
                 await FlyToTargetAsync(figureTransform, target);
-
-                _isMovingPool.Del(figureEntity);
                 
+                _isMovingPool.Del(figureEntity);
+
                 await FlyDownAsync(figureTransform, yMoveDuration);
+                
+                _moveRequestPool.Del(figureEntity);
+
+                if (_tilePool.Has(entity) && _onBoardPool.Has(figureEntity) == false)
+                    _onBoardPool.Add(figureEntity);
             }
         }
 

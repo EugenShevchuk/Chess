@@ -22,7 +22,13 @@ MonoBehaviour:
   FigureYOffset: 0.1
   WhiteFigureColor: {r: 1, g: 1, b: 1, a: 1}
   BlackFigureColor: {r: 0, g: 0, b: 0, a: 1}
-  _figures: []
+  _figures:
+  - {fileID: 7462316923375952466, guid: 9c378dc6a2a2e1440a62e10a9fe5dbd9, type: 3}
+  - {fileID: 2943983568417738657, guid: 8643e5a7c0ec0b54e8b444989b595225, type: 3}
+  - {fileID: 1369119449113069061, guid: 563d4e5896434e1479a570614564753d, type: 3}
+  - {fileID: 6200747159275187929, guid: d552c76272603a44496fb7c7b1ab3c6a, type: 3}
+  - {fileID: 541026090377470740, guid: a1fb146bfe17e3e44b10f5b84858f04b, type: 3}
+  - {fileID: 1992937121199809860, guid: 5806aaa2b79814f4c9ad4514ccb826af, type: 3}
   FigurePlacementInterval: 0.5
   Speed: 3
   StandardFlyUpHeight: 0.5

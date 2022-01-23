@@ -13,9 +13,6 @@ namespace Project.Infrastructure
     [RequireComponent(typeof(GameSceneData))]
     internal sealed class GameSceneStartup : MonoBehaviour
     {
-        [SerializeField] private Configuration _configuration;
-        [SerializeField] private GameSceneData _sceneData;
-        
         private EcsSystems _systems;
         private EcsWorld _world;
 
@@ -31,24 +28,30 @@ namespace Project.Infrastructure
             
             _systems
                 .AddGroup(SystemGroups.BOARD_GENERATION, false, null,
-                    new BoardCreatingSystem(_world, _configuration),
-                    new TileViewCreatingSystem(_world, _configuration, _sceneData),
+                    new BoardCreatingSystem(_world, config),
+                    new TileViewCreatingSystem(_world, config, sceneData),
                     new BoardCreationGroupDisablingSystem(_world))
                 
                 .AddGroup(SystemGroups.FIGURE_ARRANGEMENT, false, null,
-                    new FigureArrangingSystem(_world, _configuration),
+                    new FigureArrangingSystem(_world, config),
                     new FigurePlacingSystem(_world),
-                    new FigureCreatingSystem(_world, _sceneData),
-                    new FigureViewCreatingSystem(_world, _configuration, _sceneData))
+                    new FigureCreatingSystem(_world, sceneData),
+                    new FigureViewCreatingSystem(_world, config, sceneData))
                 
                 .AddGroup(SystemGroups.LAYOUT_CREATION, false, null,
                     new LayoutCreationFigureSelectingSystem(_world),
-                    new FigureCreatingSystem(_world, _sceneData),
-                    new FigureViewCreatingSystem(_world, _configuration, _sceneData))
+                    new FigureCreatingSystem(_world, sceneData),
+                    new FigureViewCreatingSystem(_world, config, sceneData))
+                
+                .AddGroup(SystemGroups.FIGURE_CREATION, false, null,
+                    new FigureCreatingSystem(_world, sceneData),
+                    new FigureViewCreatingSystem(_world, config, sceneData))
                 
                 .Add(new ClickEventDispatchingSystem())
                 .Add(new ClickProcessingSystem())
                 .DelHere<ClickEvent>()
+                
+                .Add(new FigureDeselectionSystem())
                 
                 .Add(new FigureMoveSystem())
                 

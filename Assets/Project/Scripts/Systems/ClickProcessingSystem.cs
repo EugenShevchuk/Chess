@@ -68,16 +68,19 @@ namespace Project.Systems
 
         private void ProcessClickOnTile(TileView view)
         {
+            if (_selected.IsEmpty())
+                return;
+                                
             if (view.Entity.Unpack(_world, out var entity))
             {
-                if (_selected.IsEmpty())
-                    return;
-                
                 if (_selected.HasOneEntity())
                 {
                     var selectedEntity = _selected.GetRawEntities()[0];
-                    ref var moveRequest = ref _moveRequestPool.Add(selectedEntity);
-                    moveRequest.Destination = _world.PackEntity(entity);
+                    if (_moveRequestPool.Has(selectedEntity) == false)
+                    {
+                        ref var moveRequest = ref _moveRequestPool.Add(selectedEntity);
+                        moveRequest.Destination = _world.PackEntity(entity);
+                    }
                 }
                 else
                     throw new Exception("There is more than one entity selected");

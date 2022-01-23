@@ -11,6 +11,7 @@ namespace Project.Systems
 {
     internal sealed class FigureViewCreatingSystem : IEcsRunSystem
     {
+        private readonly EcsWorld _world;
         private readonly Configuration _configuration;
         private readonly GameSceneData _sceneData;
         
@@ -23,13 +24,13 @@ namespace Project.Systems
         
         public FigureViewCreatingSystem(EcsWorld world, Configuration configuration, GameSceneData sceneData)
         {
+            _world = world;
             _configuration = configuration;
             _sceneData = sceneData;
 
             _filter = world
-                .Filter<Figure>()
+                .Filter<CreateFigureRequest>()
                 .Inc<CreateViewRequest>()
-                .Inc<CreateFigureRequest>()
                 .Exc<ObjectViewRef>()
                 .End();
 
@@ -46,16 +47,16 @@ namespace Project.Systems
                 var figureRequest = _figureRequestPool.Get(i);
 
                 ref var viewRef = ref _viewRefPool.Add(i);
-                ref var figure = ref _figurePool.Get(i);
+                ref var figure = ref _figurePool.Add(i);
 
-                (viewRef.View, figure.Transform) = CreateView(figureRequest.Type, figureRequest.Team);
+                (viewRef.View, figure.Transform) = CreateView(figureRequest.Type, figureRequest.Team, i);
                 
                 _figureRequestPool.Del(i);
                 _viewRequestPool.Del(i);
             }
         }
 
-        private (FigureView, Transform) CreateView(FigureType type, Team team)
+        private (FigureView, Transform) CreateView(FigureType type, Team team, int entity)
         {
             var prefab = _configuration.FigureMap[type];
 
@@ -81,6 +82,9 @@ namespace Project.Systems
 
             var view = Object.Instantiate(prefab, position, rotation);
             view.GetComponent<MeshRenderer>().material.color = color;
+            view.SetFigureImage(team);
+            view.Entity = _world.PackEntity(entity);
+            
             return (view, view.transform);
         }
     }

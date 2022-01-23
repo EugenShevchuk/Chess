@@ -61,8 +61,6 @@ namespace Project.Systems
 
         private void CreateFigure(int entity, Team team, FigureType type)
         {
-            _figurePool.Add(entity);
-            
             switch (team)
             {
                 case Team.White:
